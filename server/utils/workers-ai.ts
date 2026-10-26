@@ -33,7 +33,7 @@ export async function runImageEdit(input: {
 }): Promise<Uint8Array> {
   const form = new FormData()
   form.append('prompt', input.prompt)
-  form.append('input_image_0', new Blob([input.image], { type: 'image/jpeg' }), 'photo.jpg')
+  form.append('input_image_0', new Blob([input.image as Uint8Array<ArrayBuffer>], { type: 'image/jpeg' }), 'photo.jpg')
   form.append('width', String(input.width))
   form.append('height', String(input.height))
   form.append('seed', String(input.seed))
