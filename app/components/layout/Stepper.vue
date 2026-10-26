@@ -53,13 +53,6 @@ const steps = computed(() => [
   color: var(--color-text-subtle);
 }
 
-.step + .step::before {
-  content: '';
-  width: 16px;
-  height: 1px;
-  margin-right: var(--space-2);
-  background: var(--color-border-strong);
-}
 
 .step--done {
   color: var(--color-accent-text);
@@ -90,6 +83,14 @@ const steps = computed(() => [
 @media (min-width: 768px) {
   .step {
     display: flex;
+  }
+
+  .step + .step::before {
+    content: '';
+    width: 16px;
+    height: 1px;
+    margin-right: var(--space-2);
+    background: var(--color-border-strong);
   }
 }
 </style>
