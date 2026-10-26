@@ -3,3 +3,10 @@
 docs/screenshots/
 node_modules/
 .env
+.nuxt/
+.output/
+.data/
+.nitro/
+.cache/
+.vercel/
+.superpowers/
