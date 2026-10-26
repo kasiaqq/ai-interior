@@ -54,9 +54,9 @@ async function upload(file: File) {
   checking.value = true
   const analysis = await checkPhoto(session.photo!.blob).catch(() => PASS)
   if (upload !== latestUpload) return
-  checking.value = false
   session.setAnalysis(analysis)
-  if (analysis.verdict === 'ok') navigateTo('/room')
+  if (analysis.verdict === 'ok') return navigateTo('/room')
+  checking.value = false
 }
 </script>
 

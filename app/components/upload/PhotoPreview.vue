@@ -14,8 +14,8 @@ const formatSize = (bytes: number) =>
       <img :src="photo.url" :width="photo.width" :height="photo.height" alt="Your photo" class="preview__image" />
       <span class="preview__label">{{ photo.fileName }} · {{ formatSize(photo.fileSize) }}</span>
     </div>
-    <button type="button" class="btn" @click="emit('replace')">Replace photo</button>
     <slot />
+    <button type="button" class="btn" @click="emit('replace')">Replace photo</button>
   </div>
 </template>
 
