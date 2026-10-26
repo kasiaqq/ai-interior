@@ -1,0 +1,58 @@
+/* Values read from docs/screenshots (dark theme only, as designed). */
+:root {
+  --color-bg: #141615;
+  --color-surface: #1b1d1c;
+  --color-surface-raised: #222524;
+  --color-border: #2e3230;
+  --color-border-strong: #4a4f4c;
+  --color-text: #edebe6;
+  --color-text-muted: #9a9e9b;
+  --color-text-subtle: #737874;
+  --color-accent: #7fc4a4;
+  --color-accent-hover: #93d1b4;
+  --color-accent-ink: #0f241b;
+  --color-accent-soft: #1d2f27;
+  --color-accent-text: #8fd0b1;
+  --color-warning-bg: #2a2418;
+  --color-warning-border: #5a4a2a;
+  --color-warning-text: #e8c98a;
+  --color-overlay: rgb(10 12 11 / 0.72);
+
+  --font-serif: 'Instrument Serif', Georgia, serif;
+  --font-sans: 'Schibsted Grotesk', system-ui, sans-serif;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.8125rem;
+  --text-md: 0.9375rem;
+  --text-lg: 1.0625rem;
+  --text-title: 2.25rem;
+  --text-display: 3rem;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-pill: 999px;
+
+  --header-height: 56px;
+  --footer-height: 72px;
+  --content-width: 1000px;
+  --gutter: 16px;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --gutter: 32px;
+    --text-title: 2.5rem;
+    --text-display: 3.25rem;
+  }
+}
