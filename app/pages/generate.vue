@@ -20,6 +20,11 @@ watch(
 function cancel() {
   generation.cancel()
 }
+
+// Nothing generates in the background: leaving this screen ends the run.
+onBeforeRouteLeave((to) => {
+  if (!to.path.startsWith('/result/')) generation.cancel()
+})
 </script>
 
 <template>

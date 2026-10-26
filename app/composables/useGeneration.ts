@@ -54,6 +54,10 @@ export function createGeneration() {
     )
       .then(({ blob, description }) => {
         if (run !== latestRun) return
+        if (session.photo !== photo) {
+          state.value = { status: 'cancelled' }
+          return
+        }
         const result = session.addResult({ style, roomType, blob, description })
         state.value = { status: 'done', resultId: result.id }
       })

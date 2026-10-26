@@ -90,6 +90,18 @@ describe('createGeneration', () => {
     expect(session.results).toHaveLength(1)
   })
 
+  it('drops a result whose photo was replaced while it ran', async () => {
+    const run = deferred()
+    request.mockReturnValue(run.promise)
+    const generation = createGeneration()
+    generation.start()
+    session.setPhoto({ blob: new Blob(['other']), fileName: 'b.jpg', fileSize: 1, width: 1024, height: 672 })
+    run.resolve()
+    await flush()
+    expect(session.results).toHaveLength(0)
+    expect(generation.state.value.status).toBe('cancelled')
+  })
+
   it('fails with the error code and leaves the session intact', async () => {
     const done = session.addResult({ style: 'japandi', roomType: 'kitchen', blob: new Blob(['r']), description: null })
     request.mockRejectedValue(new AppError('QUOTA_REACHED'))
