@@ -11,8 +11,18 @@ interface CloudflareBody {
   choices?: { message?: { content?: string } }[]
 }
 
-const accountUrl = (path: string) =>
-  `https://api.cloudflare.com/client/v4/accounts/${process.env.CF_ACCOUNT_ID}/ai/${path}`
+const DEFAULT_API_BASE = 'https://api.cloudflare.com/client/v4'
+const REQUIRED_ENV = ['CF_ACCOUNT_ID', 'CF_API_TOKEN'] as const
+
+/** CF_API_BASE exists only so tests can point the client at a local stand-in for Cloudflare. */
+function accountUrl(path: string) {
+  const missing = REQUIRED_ENV.filter((name) => !process.env[name])
+  if (missing.length) {
+    console.error(`Workers AI is not configured: set ${missing.join(' and ')}`)
+    throw new AppError('GENERATION_FAILED')
+  }
+  return `${process.env.CF_API_BASE || DEFAULT_API_BASE}/accounts/${process.env.CF_ACCOUNT_ID}/ai/${path}`
+}
 
 const authHeader = () => ({ Authorization: `Bearer ${process.env.CF_API_TOKEN}` })
 

@@ -62,6 +62,24 @@ describe('runImageEdit', () => {
   })
 })
 
+describe('configuration', () => {
+  it('sends requests to CF_API_BASE when it is set', async () => {
+    vi.stubEnv('CF_API_BASE', 'http://localhost:9999/v4')
+    fetchMock.mockResolvedValue(json({ choices: [{ message: { content: 'x' } }] }))
+    await runVisionChat({ prompt: 'q', images: [], maxTokens: 1 })
+    expect(fetchMock.mock.calls[0][0]).toBe('http://localhost:9999/v4/accounts/acc/ai/v1/chat/completions')
+  })
+
+  it('fails without calling Cloudflare and names the missing variables', async () => {
+    vi.stubEnv('CF_API_TOKEN', '')
+    const log = vi.spyOn(console, 'error').mockImplementation(() => {})
+    expect(await errorCode(runImageEdit(imageInput))).toBe('GENERATION_FAILED')
+    expect(fetchMock).not.toHaveBeenCalled()
+    expect(log).toHaveBeenCalledWith(expect.stringContaining('CF_API_TOKEN'))
+    log.mockRestore()
+  })
+})
+
 describe('runVisionChat', () => {
   it('returns the message content from Mistral Small 3.1', async () => {
     fetchMock.mockResolvedValue(json({ choices: [{ message: { content: '{"a":1}' } }] }))
