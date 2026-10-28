@@ -10,12 +10,17 @@ const props = defineProps<{
   downloadName: string
 }>()
 
-const copied = ref(false)
+const COPY_LABELS = { idle: 'Copy details', copied: 'Copied', failed: 'Couldn’t copy' }
+const copyState = ref<keyof typeof COPY_LABELS>('idle')
+
 async function copy() {
   if (!props.copyText) return
-  await navigator.clipboard.writeText(props.copyText)
-  copied.value = true
-  setTimeout(() => (copied.value = false), 2000)
+  // The clipboard can be missing (plain http) or refused by the browser.
+  copyState.value = await navigator.clipboard?.writeText(props.copyText).then(
+    () => 'copied' as const,
+    () => 'failed' as const,
+  ) ?? 'failed'
+  setTimeout(() => (copyState.value = 'idle'), 2000)
 }
 </script>
 
@@ -65,7 +70,7 @@ async function copy() {
     <div class="panel__footer">
       <div class="panel__actions">
         <button v-if="copyText" type="button" class="btn" @click="copy">
-          <AppIcon name="copy" :size="14" /> {{ copied ? 'Copied' : 'Copy details' }}
+          <AppIcon name="copy" :size="14" /> {{ COPY_LABELS[copyState] }}
         </button>
         <a :href="downloadUrl" :download="downloadName" class="btn btn--primary">
           <AppIcon name="download" :size="14" /> Download<span class="wide-text">&nbsp;image</span>
