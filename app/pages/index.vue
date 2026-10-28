@@ -46,8 +46,10 @@ async function upload(file: File) {
   error.value = undefined
   try {
     const photo = await normalizePhoto(file)
+    if (upload !== latestUpload) return
     session.setPhoto({ ...photo, fileName: file.name, fileSize: file.size })
   } catch (e) {
+    if (upload !== latestUpload) return
     error.value = errorMessage(e instanceof AppError ? e.code : 'INVALID_FILE')
     return
   }
