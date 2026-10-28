@@ -36,7 +36,7 @@ function restart() {
         <NuxtLink v-else-if="lastResult" :to="`/result/${lastResult.id}`" class="header__link">
           Back to the last result
         </NuxtLink>
-        <button type="button" class="btn wide-only" @click="startOver">Start over</button>
+        <button type="button" class="btn header__start-over" @click="startOver">Start over</button>
       </div>
       <Stepper v-else />
     </div>
@@ -95,9 +95,19 @@ function restart() {
   display: none;
 }
 
+.header__start-over {
+  min-height: 32px;
+  padding: 0 var(--space-3);
+}
+
 @media (min-width: 768px) {
   .wide-only {
     display: inline-flex;
+  }
+
+  .header__start-over {
+    min-height: 40px;
+    padding: 0 var(--space-4);
   }
 
   .narrow-only {

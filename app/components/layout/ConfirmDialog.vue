@@ -3,6 +3,7 @@ const props = defineProps<{ open: boolean; title: string; body: string; confirmL
 const emit = defineEmits<{ confirm: []; cancel: [] }>()
 
 const dialog = ref<HTMLDialogElement>()
+const titleId = useId()
 watch(
   () => props.open,
   (open) => (open ? dialog.value?.showModal() : dialog.value?.close()),
@@ -10,8 +11,8 @@ watch(
 </script>
 
 <template>
-  <dialog ref="dialog" class="dialog card" @cancel.prevent="emit('cancel')">
-    <h2 class="title dialog__title">{{ title }}</h2>
+  <dialog ref="dialog" class="dialog card" :aria-labelledby="titleId" @cancel.prevent="emit('cancel')">
+    <h2 :id="titleId" class="title dialog__title">{{ title }}</h2>
     <p class="lead">{{ body }}</p>
     <div class="dialog__actions">
       <button type="button" class="btn btn--ghost" @click="emit('cancel')">Cancel</button>
