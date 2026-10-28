@@ -38,12 +38,14 @@ export function createGeneration() {
   const state = ref<GenerationState>({ status: 'idle' })
   let controller: AbortController | null = null
   let latestRun = 0
+  let lastOptions: { problem?: ProblemId } = {}
 
   function start(options: { problem?: ProblemId } = {}) {
     const session = useSessionStore()
     const { photo, roomType, style } = session
     if (state.value.status === 'running' || !photo || !roomType || !style) return
 
+    lastOptions = options
     const run = ++latestRun
     controller = new AbortController()
     state.value = { status: 'running', startedAt: Date.now() }
@@ -74,7 +76,10 @@ export function createGeneration() {
     state.value = { status: 'cancelled' }
   }
 
-  return { state: readonly(state), start, cancel }
+  /** Runs the last request again, keeping its reported problem. */
+  const retry = () => start(lastOptions)
+
+  return { state: readonly(state), start, retry, cancel }
 }
 
 let shared: ReturnType<typeof createGeneration> | null = null

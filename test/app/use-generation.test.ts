@@ -102,6 +102,16 @@ describe('createGeneration', () => {
     expect(generation.state.value.status).toBe('cancelled')
   })
 
+  it('retries a failed run with the same reported problem', async () => {
+    request.mockRejectedValueOnce(new AppError('GENERATION_FAILED'))
+    request.mockResolvedValueOnce({ blob: new Blob(['after']), description: null })
+    const generation = createGeneration()
+    generation.start({ problem: 'door' })
+    await flush()
+    generation.retry()
+    expect(request.mock.calls[1]![0].problem).toBe('door')
+  })
+
   it('fails with the error code and leaves the session intact', async () => {
     const done = session.addResult({ style: 'japandi', roomType: 'kitchen', blob: new Blob(['r']), description: null })
     request.mockRejectedValue(new AppError('QUOTA_REACHED'))

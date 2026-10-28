@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import type { Progress } from '~/composables/useGeneration'
 
 const props = defineProps<{ photoUrl: string; styleLabel: string; progress: Progress }>()
@@ -15,10 +16,11 @@ const status = computed(() =>
 </script>
 
 <template>
-  <section class="card generating" aria-live="polite">
+  <section class="card generating">
     <img :src="photoUrl" alt="" class="generating__photo" />
     <h1 class="title generating__title">Restyling your room in {{ styleLabel }}</h1>
     <p class="generating__status">{{ status }}</p>
+    <p class="visually-hidden" aria-live="polite">{{ STAGES[progress.stage] }}</p>
 
     <div
       class="bar"

@@ -8,17 +8,23 @@ const generation = useGeneration()
 const state = generation.state
 const lastResult = computed(() => session.results.at(-1))
 
+const router = useRouter()
+
 watch(
   () => state.value,
-  (current) => {
+  (current, previous) => {
     if (current.status === 'done') navigateTo(`/result/${current.resultId}`, { replace: true })
-    if (current.status === 'idle' || current.status === 'cancelled') navigateTo('/style', { replace: true })
+    // Landing here with nothing running (e.g. via the Forward button) has nothing to show.
+    const nothingRunning = current.status === 'idle' || current.status === 'cancelled'
+    if (!previous && nothingRunning) navigateTo('/style', { replace: true })
   },
   { immediate: true },
 )
 
+/** Back to wherever the run was started from — the style step or a result — without a duplicate history entry. */
 function cancel() {
   generation.cancel()
+  router.back()
 }
 
 // Nothing generates in the background: leaving this screen ends the run.
@@ -41,7 +47,7 @@ onBeforeRouteLeave((to) => {
       <h1 class="title failed__title">That didn’t work</h1>
       <p class="lead">{{ errorMessage(state.code) }}</p>
       <div class="failed__actions">
-        <button v-if="state.code !== 'QUOTA_REACHED'" type="button" class="btn btn--primary" @click="generation.start()">
+        <button v-if="state.code !== 'QUOTA_REACHED'" type="button" class="btn btn--primary" @click="generation.retry()">
           Try again
         </button>
         <NuxtLink v-if="lastResult" :to="`/result/${lastResult.id}`" class="btn">Back to the last result</NuxtLink>
