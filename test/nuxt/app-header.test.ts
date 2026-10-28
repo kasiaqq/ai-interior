@@ -17,7 +17,7 @@ beforeEach(() => {
 })
 
 const startOverButton = (wrapper: Awaited<ReturnType<typeof mountSuspended>>) =>
-  wrapper.findAll('button').find((b) => b.text() === 'Start over')!
+  wrapper.findAll('button').find((b: { text(): string }) => b.text() === 'Start over')!
 
 describe('header', () => {
   it('asks before Start over clears the session', async () => {
