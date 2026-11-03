@@ -1,7 +1,14 @@
 import { describe, expect, it } from 'vitest'
 import { AppError, errorMessage, type ErrorCode } from '#shared/errors'
 
-const CODES: ErrorCode[] = ['INVALID_FILE', 'QUOTA_REACHED', 'GENERATION_FAILED', 'NETWORK']
+const CODES: ErrorCode[] = [
+  'INVALID_FILE',
+  'QUOTA_REACHED',
+  'GENERATION_FAILED',
+  'NETWORK',
+  'VERIFICATION_FAILED',
+  'RATE_LIMITED',
+]
 
 describe('errors', () => {
   it('has a user message for every code', () => {

@@ -38,7 +38,7 @@ function generate() {
 
     <StepFooter
       back-to="/room"
-      :hint="`Takes about ${ESTIMATED_SECONDS} seconds. Generate as many times as you like.`"
+      :hint="`Takes about ${ESTIMATED_SECONDS} seconds. Up to 10 generations every 10 minutes.`"
       :primary-label="style ? `Generate ${STYLES[style].label}` : 'Pick a style'"
       :primary-disabled="!style"
       @primary="generate"

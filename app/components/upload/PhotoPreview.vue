@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { SessionPhoto } from '~/stores/session'
 
-defineProps<{ photo: SessionPhoto; dimmed?: boolean }>()
+defineProps<{ photo: SessionPhoto }>()
 const emit = defineEmits<{ replace: [] }>()
 
 const formatSize = (bytes: number) =>

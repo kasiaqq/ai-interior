@@ -18,6 +18,11 @@ export default defineConfig({
     timeout: 180_000,
     reuseExistingServer: false,
     // Every /api call is stubbed in the tests; a dead base URL guarantees nothing reaches Cloudflare.
-    env: { CF_API_BASE: 'http://127.0.0.1:9', CF_ACCOUNT_ID: 'e2e', CF_API_TOKEN: 'e2e' },
+    env: {
+      CF_API_BASE: 'http://127.0.0.1:9',
+      CF_ACCOUNT_ID: 'e2e',
+      CF_API_TOKEN: 'e2e',
+      NUXT_PUBLIC_TURNSTILE_SITE_KEY: 'e2e',
+    },
   },
 })

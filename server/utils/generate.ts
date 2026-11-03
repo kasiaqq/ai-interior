@@ -61,5 +61,12 @@ export async function generateRestyle(input: GenerationInput): Promise<Generatio
   return { image: Buffer.from(after).toString('base64'), description }
 }
 
-const STATUS: Record<ErrorCode, number> = { INVALID_FILE: 400, QUOTA_REACHED: 429, GENERATION_FAILED: 502, NETWORK: 502 }
+const STATUS: Record<ErrorCode, number> = {
+  INVALID_FILE: 400,
+  QUOTA_REACHED: 429,
+  GENERATION_FAILED: 502,
+  NETWORK: 502,
+  VERIFICATION_FAILED: 403,
+  RATE_LIMITED: 429,
+}
 export const statusFor = (code: ErrorCode): number => STATUS[code]

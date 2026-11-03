@@ -54,8 +54,9 @@ async function upload(file: File) {
     return
   }
   checking.value = true
-  const analysis = await checkPhoto(session.photo!.blob).catch(() => PASS)
-  if (upload !== latestUpload) return
+  const photo = session.photo!
+  const analysis = await checkPhoto(photo.blob).catch(() => PASS)
+  if (session.photo !== photo) return
   session.setAnalysis(analysis)
   if (analysis.verdict === 'ok') return navigateTo('/room')
   checking.value = false
@@ -78,7 +79,12 @@ async function upload(file: File) {
           <PhotoDropzone :error="error" @browse="pickFile" @file="receive" />
           <p class="privacy">
             <AppIcon name="lock" :size="14" />
-            Your photo and results are deleted when you close this tab. Nothing is stored, no account needed.
+            <span>
+              Your photo goes to Cloudflare only to be checked and restyled: Workers AI doesn’t keep it or train on it,
+              and Turnstile looks at your IP address and browser to keep bots out.
+              <a href="https://developers.cloudflare.com/workers-ai/platform/data-usage/" target="_blank" rel="noopener">How Cloudflare handles it</a>.
+              Results stay in this tab until you close it. No account needed.
+            </span>
           </p>
         </div>
         <aside class="tips card">
@@ -116,7 +122,7 @@ async function upload(file: File) {
         </template>
         <p class="privacy privacy--ruled">
           <AppIcon name="lock" :size="14" />
-          The photo stays in this session only. Close the tab and it is gone.
+          Sent to Cloudflare only for the check and the restyle, and not kept there. Close the tab and it is gone here too.
         </p>
       </div>
     </div>
@@ -159,6 +165,10 @@ async function upload(file: File) {
   gap: var(--space-2);
   font-size: var(--text-xs);
   color: var(--color-text-muted);
+}
+
+.privacy > svg {
+  flex: none;
 }
 
 .privacy--ruled {

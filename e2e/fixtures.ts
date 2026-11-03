@@ -53,8 +53,18 @@ const description = {
   summary: 'Warm paper walls and a wide oak floor.',
 }
 
+/** Stands in for Cloudflare's Turnstile script: every challenge passes at once. */
+const FAKE_TURNSTILE = `window.turnstile = {
+  render: (container, options) => { window.__turnstileOptions = options; return 'e2e' },
+  reset: () => {},
+  execute: () => setTimeout(() => window.__turnstileOptions.callback('e2e-token')),
+}`
+
 /** Answers both API routes in the browser, so no test spends the shared model quota. */
 export async function stubApi(page: Page, options: { quotaUsedUp?: boolean } = {}) {
+  await page.route('https://challenges.cloudflare.com/**', (route) =>
+    route.fulfill({ contentType: 'text/javascript', body: FAKE_TURNSTILE }),
+  )
   await page.route('**/api/photo-check', (route) =>
     route.fulfill({ json: { verdict: 'ok', warnings: [], positives: ['Wide shot'] } }),
   )

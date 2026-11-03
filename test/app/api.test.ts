@@ -1,13 +1,19 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { AppError } from '#shared/errors'
 import { checkPhoto, requestGeneration } from '~/utils/api'
+import { turnstileToken } from '~/utils/turnstile'
+
+vi.mock('~/utils/turnstile', () => ({ turnstileToken: vi.fn() }))
 
 const fetchMock = vi.fn()
 const input = { photo: new Blob(['p']), width: 1024, height: 672, roomType: 'kitchen' as const, style: 'japandi' as const, seed: 5 }
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status })
 const codeOf = async (promise: Promise<unknown>) => ((await promise.catch((e) => e)) as AppError).code
 
-beforeEach(() => vi.stubGlobal('fetch', fetchMock))
+beforeEach(() => {
+  vi.stubGlobal('fetch', fetchMock)
+  vi.mocked(turnstileToken).mockResolvedValue('token-1')
+})
 afterEach(() => {
   vi.unstubAllGlobals()
   fetchMock.mockReset()
@@ -30,6 +36,7 @@ describe('requestGeneration', () => {
       style: 'japandi',
       seed: '5',
       problem: 'door',
+      turnstileToken: 'token-1',
     })
     expect(result.blob.type).toBe('image/jpeg')
     expect(await result.blob.text()).toBe('jpeg')
@@ -41,6 +48,11 @@ describe('requestGeneration', () => {
     expect(await codeOf(requestGeneration(input, new AbortController().signal))).toBe('QUOTA_REACHED')
   })
 
+  it('maps a 429 without our error code (Vercel rate limit) to RATE_LIMITED', async () => {
+    fetchMock.mockResolvedValue(new Response('Too Many Requests', { status: 429 }))
+    expect(await codeOf(requestGeneration(input, new AbortController().signal))).toBe('RATE_LIMITED')
+  })
+
   it('maps an unknown server failure to GENERATION_FAILED', async () => {
     fetchMock.mockResolvedValue(new Response('Bad gateway', { status: 504 }))
     expect(await codeOf(requestGeneration(input, new AbortController().signal))).toBe('GENERATION_FAILED')
@@ -49,6 +61,12 @@ describe('requestGeneration', () => {
   it('maps a network failure to NETWORK', async () => {
     fetchMock.mockRejectedValue(new TypeError('Failed to fetch'))
     expect(await codeOf(requestGeneration(input, new AbortController().signal))).toBe('NETWORK')
+  })
+
+  it('does not call the API when Turnstile fails', async () => {
+    vi.mocked(turnstileToken).mockRejectedValue(new AppError('VERIFICATION_FAILED'))
+    expect(await codeOf(requestGeneration(input, new AbortController().signal))).toBe('VERIFICATION_FAILED')
+    expect(fetchMock).not.toHaveBeenCalled()
   })
 
   it('rethrows an abort untouched', async () => {
@@ -64,5 +82,6 @@ describe('checkPhoto', () => {
     fetchMock.mockResolvedValue(json(analysis))
     expect(await checkPhoto(new Blob(['p']))).toEqual(analysis)
     expect(fetchMock.mock.calls[0][0]).toBe('/api/photo-check')
+    expect((fetchMock.mock.calls[0][1].body as FormData).get('turnstileToken')).toBe('token-1')
   })
 })

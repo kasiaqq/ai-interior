@@ -200,3 +200,12 @@ a {
   clip-path: inset(50%);
   white-space: nowrap;
 }
+
+/* Turnstile stays empty unless Cloudflare asks for an interaction; then it floats above the step footer. */
+.turnstile {
+  position: fixed;
+  bottom: calc(var(--footer-height) + var(--space-4));
+  left: 50%;
+  z-index: 20;
+  transform: translateX(-50%);
+}

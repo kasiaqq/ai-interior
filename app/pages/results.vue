@@ -83,7 +83,7 @@ function newVariant() {
       <button v-if="lastStyle" type="button" class="btn" @click="newVariant">
         New variant of {{ STYLES[lastStyle].label }}
       </button>
-      <p class="results__limits">No limits — generate as many as you want while this tab is open.</p>
+      <p class="results__limits">Up to 10 generations every 10 minutes while this tab is open.</p>
     </div>
   </div>
 </template>

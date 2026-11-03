@@ -6,6 +6,8 @@ export default defineNuxtConfig({
   modules: ['@pinia/nuxt', '@nuxt/fonts'],
   css: ['~/assets/css/tokens.css', '~/assets/css/base.css'],
   components: [{ path: '~/components', pathPrefix: false }],
+  // Set by NUXT_PUBLIC_TURNSTILE_SITE_KEY; the matching secret is read on the server only.
+  runtimeConfig: { public: { turnstileSiteKey: '' } },
   // Image (~10 s) plus description (~8 s) outlast Vercel's default function timeout.
   nitro: { vercel: { functions: { maxDuration: 60 } } },
   app: {

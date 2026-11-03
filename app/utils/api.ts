@@ -1,9 +1,11 @@
 import { AppError, type ErrorCode } from '#shared/errors'
 import type { ChangeDescription, GenerationResponse, PhotoAnalysis, ProblemId, RoomTypeId, StyleId } from '#shared/types'
+import { turnstileToken } from './turnstile'
 
-const KNOWN_CODES: ErrorCode[] = ['INVALID_FILE', 'QUOTA_REACHED', 'GENERATION_FAILED', 'NETWORK']
+const KNOWN_CODES: ErrorCode[] = ['INVALID_FILE', 'QUOTA_REACHED', 'GENERATION_FAILED', 'NETWORK', 'VERIFICATION_FAILED']
 
 async function post<T>(url: string, body: FormData, signal?: AbortSignal): Promise<T> {
+  body.append('turnstileToken', await turnstileToken())
   let response: Response
   try {
     response = await fetch(url, { method: 'POST', body, signal })
@@ -13,7 +15,9 @@ async function post<T>(url: string, body: FormData, signal?: AbortSignal): Promi
   }
   if (response.ok) return response.json()
   const code = (await response.json().catch(() => null))?.data?.code
-  throw new AppError(KNOWN_CODES.includes(code) ? code : 'GENERATION_FAILED')
+  if (KNOWN_CODES.includes(code)) throw new AppError(code)
+  // Our routes always name their error; a bare 429 comes from Vercel's rate-limit rule.
+  throw new AppError(response.status === 429 ? 'RATE_LIMITED' : 'GENERATION_FAILED')
 }
 
 export function checkPhoto(photo: Blob): Promise<PhotoAnalysis> {

@@ -1,7 +1,8 @@
+import { AppError } from '#shared/errors'
 import { checkPhotoQuality } from '../utils/photo-check'
+import { defineGuardedHandler } from '../utils/request-guard'
 
-export default defineEventHandler(async (event) => {
-  const photo = (await readMultipartFormData(event))?.find((part) => part.name === 'photo')
-  if (!photo) throw createError({ statusCode: 400, data: { code: 'INVALID_FILE' } })
-  return checkPhotoQuality(new Uint8Array(photo.data))
+export default defineGuardedHandler(async ({ photo }) => {
+  if (!photo) throw new AppError('INVALID_FILE')
+  return checkPhotoQuality(photo)
 })
