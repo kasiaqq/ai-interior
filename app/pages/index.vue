@@ -104,6 +104,7 @@ async function upload(file: File) {
 
     <div v-else class="checked">
       <PhotoPreview :photo="session.photo" @replace="pickFile">
+        <span v-if="checking" class="dots" aria-hidden="true"><span /><span /><span /></span>
         <p v-if="error" class="checked__error" role="alert">{{ error }}</p>
       </PhotoPreview>
 
@@ -236,6 +237,47 @@ async function upload(file: File) {
 
 .checked__continue {
   justify-self: start;
+}
+
+/* Under the photo while it is being checked; the heading carries the same state for screen readers. */
+.dots {
+  display: flex;
+  justify-self: center;
+  gap: var(--space-2);
+}
+
+.dots > span {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  animation: dot 1.2s ease-in-out infinite;
+}
+
+.dots > span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.dots > span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes dot {
+  0%,
+  80%,
+  100% {
+    opacity: 0.25;
+  }
+
+  40% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dots > span {
+    animation-duration: 2.4s;
+  }
 }
 
 .checked__error {
