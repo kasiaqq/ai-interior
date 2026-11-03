@@ -10,7 +10,7 @@ const model = defineModel<StyleId | null>({ required: true })
   <label class="card style-card" :class="{ 'style-card--selected': model === id }">
     <input v-model="model" type="radio" name="style" :value="id" class="visually-hidden" />
     <span v-if="model === id" class="style-card__check"><AppIcon name="check" :size="12" /></span>
-    <StyleIllustration :swatches="definition.swatches" />
+    <img :src="definition.image" alt="" class="style-card__image" />
     <span class="style-card__body">
       <span class="style-card__name">{{ definition.label }}</span>
       <span class="style-card__description">{{ definition.description }}</span>
@@ -54,6 +54,14 @@ const model = defineModel<StyleId | null>({ required: true })
   border-radius: 50%;
   background: var(--color-accent);
   color: var(--color-accent-ink);
+}
+
+/* The source photos come in different proportions; one fixed frame keeps every card the same. */
+.style-card__image {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
 }
 
 .style-card__body {

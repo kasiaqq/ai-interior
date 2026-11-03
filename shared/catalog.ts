@@ -4,6 +4,8 @@ export interface StyleDefinition {
   label: string
   description: string
   swatches: string[]
+  /** Example room shown on the style card, served from public/styles. */
+  image: string
   promptDescription: string
 }
 
@@ -13,6 +15,7 @@ export const STYLES: Record<StyleId, StyleDefinition> = {
     description:
       'Japanese restraint on Scandinavian bones: low oak furniture, paper-toned walls, one plant, clear surfaces. Warmer and less grey than the version everyone pinned five years ago.',
     swatches: ['#ECE6DA', '#B88D5E', '#8C9784', '#2A2A27'],
+    image: '/styles/japandi.webp',
     promptDescription:
       'Japandi as it looks in 2026: Japanese restraint on Scandinavian bones, low light-oak furniture, warm paper-toned walls, linen and wool textiles, one sculptural plant, clear uncluttered surfaces, warm rather than grey',
   },
@@ -21,6 +24,7 @@ export const STYLES: Record<StyleId, StyleDefinition> = {
     description:
       'Pale wood, wool and daylight as the main light source. Light without going clinical — current Scandi leans on texture and muted blues instead of all-white.',
     swatches: ['#F3F1EC', '#E2CEA8', '#A8B6C1', '#6D7780'],
+    image: '/styles/scandinavian.jpg',
     promptDescription:
       'Scandinavian as it looks in 2026: pale wood, wool and soft textures, daylight as the main light source, muted blues and warm whites, cosy but not clinical',
   },
@@ -29,6 +33,7 @@ export const STYLES: Record<StyleId, StyleDefinition> = {
     description:
       'Concrete, dark metal and worn leather, kept calm. The current reading is softer: fewer exposed pipes, more matte black, warm wood against the cold surfaces.',
     swatches: ['#9A9A96', '#6B5E4F', '#8A5634', '#2A2A28'],
+    image: '/styles/industrial.jpg',
     promptDescription:
       'Industrial as it looks in 2026: calm and soft, concrete and microcement surfaces, matte black metal, worn leather, warm wood against cool surfaces, few exposed pipes',
   },
@@ -37,6 +42,7 @@ export const STYLES: Record<StyleId, StyleDefinition> = {
     description:
       'Walnut, tapered legs, burnt orange and teal in small doses. Used sparingly today — a few signature pieces rather than a full period set.',
     swatches: ['#F1E9DA', '#A0703F', '#B45F35', '#2F5E4D'],
+    image: '/styles/midcentury.webp',
     promptDescription:
       'Mid-century modern as it looks in 2026: walnut, tapered legs, burnt orange and teal used sparingly, a few signature pieces rather than a full period set',
   },
