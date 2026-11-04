@@ -8,6 +8,8 @@ const generation = useGeneration()
 const state = generation.state
 const lastResult = computed(() => session.results.at(-1))
 
+useHead({ title: computed(() => (state.value.status === 'failed' ? 'That didn’t work' : 'Restyling your room')) })
+
 const router = useRouter()
 
 watch(

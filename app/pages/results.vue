@@ -6,6 +6,8 @@ import { relativeTime } from '~/utils/relative-time'
 
 const COUNT_WORDS = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten']
 
+useHead({ title: 'All results' })
+
 const session = useSessionStore()
 const generation = useGeneration()
 

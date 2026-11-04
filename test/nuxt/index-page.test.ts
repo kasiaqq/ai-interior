@@ -1,5 +1,6 @@
 import { mockNuxtImport, mountSuspended } from '@nuxt/test-utils/runtime'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import type { PhotoAnalysis } from '#shared/types'
 import ConfirmDialog from '~/components/layout/ConfirmDialog.vue'
 import PhotoCheckPanel from '~/components/upload/PhotoCheckPanel.vue'
 import PhotoDropzone from '~/components/upload/PhotoDropzone.vue'
@@ -51,6 +52,27 @@ describe('upload step', () => {
     expect(navigateToMock).not.toHaveBeenCalled()
     expect(wrapper.text()).toContain('The left wall is cut off')
     expect(wrapper.text()).toContain('Continue anyway')
+  })
+
+  it('announces the check while it runs and the warning it ends with', async () => {
+    let finishCheck!: (analysis: PhotoAnalysis) => void
+    check.mockImplementation(() => new Promise((resolve) => (finishCheck = resolve)))
+    const wrapper = await mountSuspended(IndexPage)
+    await dropFile(wrapper, file('room.jpg'))
+    const status = wrapper.get('[role="status"]')
+    expect(status.text()).toBe('Checking your photo…')
+
+    finishCheck({ verdict: 'warning', warnings: ['Low light'], positives: [] })
+    await flush()
+    expect(status.text()).toBe('This one may be hard to work with')
+  })
+
+  it('moves focus to the heading once the first photo replaces the upload screen', async () => {
+    check.mockImplementation(() => new Promise(() => {}))
+    const wrapper = await mountSuspended(IndexPage, { attachTo: document.body })
+    await dropFile(wrapper, file('room.jpg'))
+    expect(document.activeElement?.textContent).toBe('Checking your photo…')
+    wrapper.unmount()
   })
 
   it('asks before a new photo replaces existing results', async () => {

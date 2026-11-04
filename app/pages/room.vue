@@ -2,6 +2,8 @@
 import type { RoomTypeId } from '#shared/types'
 import { useSessionStore } from '~/stores/session'
 
+useHead({ title: 'Room type' })
+
 const session = useSessionStore()
 const roomType = ref<RoomTypeId | null>(session.roomType)
 

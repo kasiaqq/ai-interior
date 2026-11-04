@@ -46,6 +46,11 @@ a {
   outline-offset: 2px;
 }
 
+/* Headings take focus only after a view change; they are not controls. */
+h1[tabindex='-1']:focus {
+  outline: none;
+}
+
 .container {
   width: 100%;
   max-width: calc(var(--content-width) + 2 * var(--gutter));

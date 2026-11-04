@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import { generateJapandi, stubApi } from './fixtures'
+import { generateJapandi, roomPhoto, stubApi } from './fixtures'
 
 test('restyles a photo in two styles and compares them', async ({ page }) => {
   await stubApi(page)
@@ -13,6 +13,31 @@ test('restyles a photo in two styles and compares them', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Two takes on the same room' })).toBeVisible()
   for (const box of await page.getByRole('checkbox', { name: 'Compare' }).all()) await box.check()
   await expect(page.getByLabel('Comparison')).toContainText('Japandi · variant 1 and Industrial · variant 1')
+})
+
+test('starts each step on its heading and names the tab after it', async ({ page }) => {
+  await stubApi(page)
+  await page.goto('/')
+  await expect(page).toHaveTitle('Upload a photo · AI Interior')
+  await expect(page.locator('h1')).not.toBeFocused()
+
+  await page.locator('input[type="file"]').setInputFiles(roomPhoto())
+  await expect(page).toHaveTitle('Room type · AI Interior')
+  await expect(page.getByRole('heading', { name: 'What room is this?' })).toBeFocused()
+
+  await page.getByText('Living room', { exact: true }).click()
+  await page.getByRole('button', { name: 'Continue to styles' }).click()
+  await expect(page).toHaveTitle('Pick a style · AI Interior')
+  await expect(page.getByRole('heading', { name: 'Pick a style for your living room' })).toBeFocused()
+
+  await page.locator('label', { hasText: 'Japandi' }).click()
+  await page.getByRole('button', { name: 'Generate Japandi' }).click()
+  await expect(page).toHaveTitle('Japandi · variant 1 · AI Interior')
+  await expect(page.getByRole('heading', { name: 'Japandi · variant 1' })).toBeFocused()
+
+  await page.getByRole('link', { name: /All results in this session/ }).click()
+  await expect(page).toHaveTitle('All results · AI Interior')
+  await expect(page.getByRole('heading', { name: 'One take on the same room' })).toBeFocused()
 })
 
 test('keeps the photo and choices when the daily quota is used up', async ({ page }) => {

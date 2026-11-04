@@ -4,6 +4,8 @@ import type { StyleId } from '#shared/types'
 import { ESTIMATED_SECONDS } from '~/composables/useGeneration'
 import { useSessionStore } from '~/stores/session'
 
+useHead({ title: 'Pick a style' })
+
 const session = useSessionStore()
 const generation = useGeneration()
 const style = ref<StyleId | null>(session.style)

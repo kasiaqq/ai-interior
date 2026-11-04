@@ -4,6 +4,7 @@ import { AppError, errorMessage } from '#shared/errors'
 import type { PhotoAnalysis } from '#shared/types'
 import { useSessionStore } from '~/stores/session'
 import { checkPhoto } from '~/utils/api'
+import { focusHeading } from '~/utils/focus-heading'
 import { normalizePhoto } from '~/utils/normalize-photo'
 
 const PASS: PhotoAnalysis = { verdict: 'ok', warnings: [], positives: [] }
@@ -14,12 +15,19 @@ const TIPS = [
   'No filters, no panorama, no people in the shot',
 ]
 
+useHead({ title: 'Upload a photo' })
+
 const session = useSessionStore()
 const fileInput = ref<HTMLInputElement>()
 const error = ref<string>()
 const checking = ref(false)
 const pendingFile = ref<File | null>(null)
 let latestUpload = 0
+
+const checkStatus = computed(() => {
+  if (checking.value) return 'Checking your photo…'
+  return session.analysis?.verdict === 'warning' ? 'This one may be hard to work with' : ''
+})
 
 const pickFile = () => fileInput.value?.click()
 
@@ -47,7 +55,10 @@ async function upload(file: File) {
   try {
     const photo = await normalizePhoto(file)
     if (upload !== latestUpload) return
+    const firstPhoto = !session.photo
     session.setPhoto({ ...photo, fileName: file.name, fileSize: file.size })
+    // The first photo swaps the whole upload screen out, taking the focused button with it.
+    if (firstPhoto) nextTick(focusHeading)
   } catch (e) {
     if (upload !== latestUpload) return
     error.value = errorMessage(e instanceof AppError ? e.code : 'INVALID_FILE')
@@ -66,6 +77,7 @@ async function upload(file: File) {
 <template>
   <div class="container">
     <input ref="fileInput" type="file" accept="image/*" class="visually-hidden" tabindex="-1" aria-hidden="true" @change="onFileChosen" />
+    <p class="visually-hidden" role="status">{{ checkStatus }}</p>
 
     <template v-if="!session.photo">
       <h1 class="title hero__title">See your room in another style</h1>

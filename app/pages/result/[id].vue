@@ -15,6 +15,8 @@ const styleLabel = computed(() => (result.value ? STYLES[result.value.style].lab
 const roomLabel = computed(() => (result.value ? ROOM_TYPES[result.value.roomType].label : ''))
 const otherStyles = computed(() => (Object.keys(STYLES) as StyleId[]).filter((id) => id !== result.value?.style))
 
+useHead({ title: computed(() => `${styleLabel.value} · variant ${variant.value}`) })
+
 const now = ref(Date.now())
 const clock = setInterval(() => (now.value = Date.now()), 30_000)
 onUnmounted(() => clearInterval(clock))
