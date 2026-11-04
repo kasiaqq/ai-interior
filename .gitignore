@@ -3,3 +3,12 @@
 docs/screenshots/
 node_modules/
 .env
+.nuxt/
+.output/
+.data/
+.nitro/
+.cache/
+.vercel/
+.superpowers/
+.claude/settings.local.json
+docs/TODO.md
