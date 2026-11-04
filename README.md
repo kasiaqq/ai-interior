@@ -41,6 +41,7 @@ Someone furnishing or refreshing their home who:
 | Wireframes | Figma — desktop and mobile |
 | UI design | Figma, imported from HTML/CSS mockups with html.to.design |
 | Typography | Instrument Serif, Schibsted Grotesk |
+| Style card images | Generated with Google Gemini from text prompts only — no existing photos used as input |
 | App | Nuxt 4 (client-only), Vue 3, Pinia, Zod, TypeScript |
 | AI models | Cloudflare Workers AI — FLUX.2 klein 4B, Mistral Small 3.1 |
 | Tests | Vitest, Vue Test Utils, happy-dom |
