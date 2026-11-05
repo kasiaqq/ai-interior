@@ -33,6 +33,7 @@ const STYLE_ORDER = Object.keys(STYLES);
 const buildPrompt = (roomType, style) =>
   [
     `Redesign this ${roomType} in ${STYLES[style]}.`,
+    'Make it beautiful and inspiring: add wall art and mirrors, plants, curtains, rugs and layered lighting that fit the style.',
     'Keep the exact same camera angle, framing and perspective.',
     'Keep the room shell identical: walls, wall positions, room size, ceiling height.',
     'Keep every window identical in position, shape, size and frame colour; curtains, blinds and other window decor may be added.',
