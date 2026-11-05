@@ -56,7 +56,7 @@ Components are registered without a path prefix (`pathPrefix: false`), so `compo
 `shared/errors.ts` holds the `ErrorCode` union, the user-facing message for each code, and `AppError`. The server maps each code to an HTTP status (`statusFor` in `server/utils/generate.ts`). The client (`app/utils/api.ts`) maps the response back to an `AppError`. A bare 429 without a code comes from Vercel's rate-limit rule and becomes `RATE_LIMITED`. To add a code, update all three places: `errors.ts`, the `STATUS` map and `KNOWN_CODES`.
 
 ### The image prompt
-`server/utils/prompt.ts` was validated in the model spike (`spike/`, run-6). Change the wording only together with a new spike run. The rules it encodes are product requirements and must stay:
+`server/utils/prompt.ts` was validated in the model spike (`spike/`, run-11). Change the wording only together with a new spike run. The rules it encodes are product requirements and must stay:
 - windows, doors and fixed fittings stay in place;
 - the space in front of any door, including balcony doors, stays free of furniture and decor;
 - mirrors never reflect windows that are not in the photo.
